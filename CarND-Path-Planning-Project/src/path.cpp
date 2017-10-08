@@ -15,8 +15,8 @@ using namespace std;
 #define LANE_TEN   0.400 // 10% wander from center lane
 #define VADJ       0.500 // lateral velocity tolerance
 #define BUFFER    15.000 // buffer distance to other vehicles, for safety
-#define PATH_OK       50 // number of path points for all-clear scenario
-#define PATH_EMERG     5 // set a shorter path for emergency braking
+#define PATH_OK       80 // number of path points for all-clear scenario
+#define PATH_EMERG     8 // set a shorter path for emergency braking
 
 // constructor
 Path::Path(vector<double> wp_x,
@@ -180,7 +180,8 @@ vector<vector<double>> Plan::GetBestTrajectory(double car_s,
   double veh_id = -1;
 
   // cars_ahead - car's ahead in lane including improbable shift from adjacent lanes
-  auto cars_ahead = CarsAhead(car_s, current_lane, 0, 40, true);
+  // this will serve as a check for the lane being clear to move into
+  auto cars_ahead = CarsAhead(car_s, current_lane, 0, 30, true);
 
   prev_size = previous_path_x.size();
   if (cars_ahead.size()>0) {
@@ -226,7 +227,7 @@ vector<vector<double>> Plan::GetBestTrajectory(double car_s,
 
           vector<double> spline_t_points, spline_d_points;
           // interp times to smoothly change lanes over 6 seconds
-          spline_t_points = {-1, 0, 0.02, 4.02, 4.04, 5, 6};
+          spline_t_points = {-1, 0, 0.5, 2.5, 4, 5, 6};
           spline_d_points = {d_next, d_next, d_next, d_shift, d_shift, d_shift, d_shift};
 
           d_t.set_points(spline_t_points, spline_d_points);
