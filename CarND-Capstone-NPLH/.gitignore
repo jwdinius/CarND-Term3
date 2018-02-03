@@ -1,0 +1,9 @@
+*.py[cod]
+
+build
+devel
+
+profile.tmp
+.DS_Store
+
+*.pb
